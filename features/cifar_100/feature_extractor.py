@@ -11,12 +11,12 @@ DEVICE  = 'cuda' if torch.cuda.is_available() else 'cpu'
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    # 1) Build ResNet50-feature extractor
+    # Build ResNet50-feature extractor
     model = models.resnet50(pretrained=True)
     model.fc = torch.nn.Identity()
     model = model.to(DEVICE).eval()
 
-    # 2) Data transforms
+    # Data transforms
     tf = transforms.Compose([
         transforms.Resize((224,224)),
         transforms.ToTensor(),
@@ -24,7 +24,7 @@ def main():
                              std=[0.229,0.224,0.225]),
     ])
 
-    # 3) Load CIFAR-100 train & test
+    # Load CIFAR-100 train & test
     train_ds = datasets.CIFAR100(root='.', train=True,  download=True, transform=tf)
     test_ds  = datasets.CIFAR100(root='.', train=False, download=True, transform=tf)
 

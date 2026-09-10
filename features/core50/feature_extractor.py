@@ -2,7 +2,6 @@ import os
 import numpy as np
 import torch
 from torchvision import models, transforms
-from PIL import Image
 from datasets import load_dataset
 
 OUT_DIR = "features\\core50"
