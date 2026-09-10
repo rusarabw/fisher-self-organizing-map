@@ -2,8 +2,8 @@ import numpy as np
 import sys
 import copy
 
-class EWCSOM:
-    def __init__(self, m, n, dim, learning_rate=0.5, seed=None, ewc_lambda=0.5, fisher_sigma=5.0):
+class EWC_SOM:
+    def __init__(self, m, n, dim, learning_rate=0.2, seed=None, ewc_lambda=0.5, fisher_sigma=5.0):
         self.m = m
         self.n = n
         self.dim = dim
@@ -115,6 +115,9 @@ class EWCSOM:
 
         self.total_iterations = epochs * n_samples
         self.global_iter_counter = 0
+
+        # Reset sigma logic for the new task
+        self.sigma = max(self.m, self.n) / 2.0
 
         bar_width = 40
 

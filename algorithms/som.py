@@ -2,7 +2,7 @@ import numpy as np
 import sys
 
 class SOM:
-    def __init__(self, m, n, dim, learning_rate=0.5, seed=None):
+    def __init__(self, m, n, dim, learning_rate=0.2, seed=None):
         """
         Initialize a rectangular SOM.
         Args:
@@ -79,6 +79,9 @@ class SOM:
         n_samples = data.shape[0]
         self.total_iterations = epochs * n_samples
         self.global_iter_counter = 0
+
+        # Reset sigma logic for the new task
+        self.sigma = max(self.m, self.n) / 2.0
 
         bar_width = 40
 
