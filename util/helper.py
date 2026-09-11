@@ -7,7 +7,7 @@ from sklearn.manifold import TSNE
 from evaluation.accuracy import evaluate_accuracy
 from evaluation.error import find_qe_te
 
-def find_r_metrices_combined(som, loader, T, beta=0.5):
+def find_r_metrices_combined(som, loader, T, beta=0.5, plot=False, out_path=None):
     # Store the BMU weight and adjacency for each sample in each task after training that task
     baseline_info = {}  
     
@@ -63,6 +63,10 @@ def find_r_metrices_combined(som, loader, T, beta=0.5):
             # Evaluate functional accuracy
             acc = evaluate_accuracy(som, X_test_j, y_test_j)
             row.append(acc)
+
+            if (plot):
+                # X, y: numpy arrays (N, d) and (N,)
+                plot_som_map(som, X_test_j, y_test_j, task_id, j, out_path=out_path, dr_method="pca")
 
             # If evaluating the current task, structural errors are 0 by definition
             if j == task_id:
@@ -364,69 +368,6 @@ def plot_som_map(
     if show_figure:
         plt.show()
     plt.close(fig)
-
-def generate_forgetting_curve(som, loader, review_interval=3):
-    """
-    Simulates the Forgetting Curve by tracking one target task while 
-    training on interference tasks, with periodic reviews.
-    
-    Args:
-        som: The self-organizing map model.
-        loader: Data loader yielding tasks.
-        review_interval: How many interference tasks to train before a 'Review' session.
-    """
-    
-    # Capture the Target Data (The "Newly Learned Information")
-    # We assume the first task in the stream is our Target.
-    data_stream = loader.stream()
-    target_id, X_train_target = next(data_stream) # Grab Task 0
-    X_test_target, y_test_target = loader.test_task_data[target_id]
-    X_test_target = np.stack(X_test_target)
-    y_test_target = np.array(y_test_target)
-
-    print(f"--- Phase: First Learned (Task {target_id}) ---")
-    som.fit(X_train_target, epochs=5, shuffle=True)
-    
-    # Metric: Retention of Task 0 over 'time'
-    retention_curve = []
-    
-    # Measure initial 100% (or max) retention
-    initial_acc = evaluate_accuracy(som, X_test_target, y_test_target)
-    retention_curve.append(initial_acc)
-    print(f"Initial Retention: {initial_acc*100:.2f}%")
-
-    # 2. Simulate Time & Reviews
-    steps_since_review = 0
-    
-    # Iterate through the rest of the tasks (Interference/Noise)
-    for task_id, X_interference in data_stream:
-        # --- Decay Phase ---
-        print(f"Training on Interference Task {task_id} (Simulating time passing)...")
-        som.fit(X_interference, epochs=5, shuffle=True)
-        
-        # Measure how much we forgot Task 0
-        current_acc = evaluate_accuracy(som, X_test_target, y_test_target)
-        retention_curve.append(current_acc)
-        
-        steps_since_review += 1
-        
-        # --- Review Phase ---
-        if steps_since_review >= review_interval:
-            print(f"--- Phase: Reviewing Target Information (Task {target_id}) ---")
-            
-            # Re-train on the original Target Data (Review)
-            som.fit(X_train_target, epochs=3, shuffle=True) 
-            
-            # Measure retention immediately after review (Should spike up)
-            reviewed_acc = evaluate_accuracy(som, X_test_target, y_test_target)
-            retention_curve.append(reviewed_acc)
-            
-            print(f"Retention after review: {reviewed_acc*100:.2f}%")
-            steps_since_review = 0
-
-    return retention_curve
-
-import numpy as np
 
 def find_stability_plasticity(som, loader, T):
     """
