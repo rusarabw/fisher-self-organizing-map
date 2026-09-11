@@ -12,7 +12,7 @@ class Experiment02_C(unittest.TestCase):
         loader = CUB200Loader(feat_dir="features\\cub_200_2011", tasks=20, classes_per_task=10)
         T = 20  # number of tasks
 
-        fsom = FSOM(m=20, n=20, dim=2048, learning_rate=0.2, seed=42, ewc_lambda=0.5, fisher_sigma=5.0)
+        fsom = FSOM(m=20, n=20, dim=2048, learning_rate=0.2, seed=42, ewc_lambda=1.0, fisher_sigma=5.0)
         print("FSOM initialized!")
         non_ewc_fsom = NON_EWC_FSOM(m=20, n=20, dim=2048, learning_rate=0.2, seed=42)
         print("NON_EWC_FSOM initialized!")
@@ -28,7 +28,7 @@ class Experiment02_C(unittest.TestCase):
 
         # --- Plotting ---
         fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-        fig.suptitle('Performance Metrics FSOM vs NON_EWC_FSOM on CUB-200-2011\nm=20, n=20, dim=512, learning_rate=0.2, seed=42', fontsize=12)
+        fig.suptitle('Performance Metrics FSOM vs NON_EWC_FSOM on CUB-200-2011\nm=20, n=20, dim=2048, learning_rate=0.2, seed=42', fontsize=12)
 
         # Average Incremental BMU Weight Difference
         axes[0, 0].plot(tasks, AIA_non_ewc_fsom_bmu, marker='o', color='blue', label='NON-EWC')
