@@ -30,12 +30,12 @@ class Experiment02_C(unittest.TestCase):
         fig, axes = plt.subplots(2, 2, figsize=(12, 8))
         fig.suptitle('Performance Metrics FSOM vs NON_EWC_FSOM on CUB-200-2011\nm=20, n=20, dim=2048, learning_rate=0.2, seed=42', fontsize=12)
 
-        # Average Incremental BMU Weight Difference
+        # Average Incremental BMU Weight Shift Error
         axes[0, 0].plot(tasks, AIA_non_ewc_fsom_bmu, marker='o', color='blue', label='NON-EWC')
         axes[0, 0].plot(tasks, AIA_fsom_bmu, marker='x', color='red', label='EWC (λ=0.5)')
-        axes[0, 0].set_title('Average Incremental BMU Weight Difference')
+        axes[0, 0].set_title('Average Incremental BMU Weight Shift Error')
         axes[0, 0].set_xlabel('Task')
-        axes[0, 0].set_ylabel('BMU Difference')
+        axes[0, 0].set_ylabel('BMU Weight Shift Error')
         axes[0, 0].grid(True)
         axes[0, 0].legend()
 
