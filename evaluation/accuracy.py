@@ -1,5 +1,3 @@
-import numpy as np
-
 from collections import defaultdict
 
 def evaluate_accuracy(som, X, y_true):
