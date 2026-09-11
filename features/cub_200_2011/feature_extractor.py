@@ -4,8 +4,8 @@ import torch
 from torchvision import models, transforms
 from PIL import Image
 
-CUB_ROOT = "datasets\\cub_200_2011\\CUB_200_2011"
-CUB_IMG_ROOT = "datasets\\cub_200_2011\\CUB_200_2011\\images"
+CUB_ROOT = "datasets\\cub_200_2011"
+CUB_IMG_ROOT = "datasets\\cub_200_2011\\images"
 OUT_DIR  = "features\\cub_200_2011"
 
 def read_list(path):
